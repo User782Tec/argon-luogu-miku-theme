@@ -1,6 +1,6 @@
 /* ==UserStyle==
 @name         氩洛谷 Re 2024
-@version      20240820.15.17
+@version      20240824.15.17
 @namespace    https://userstyles.world/style/12397/re-2024
 @description  洛谷美化样式。
 @author       d0j1a1701
@@ -9,7 +9,8 @@
 @var	checkbox dark-mode "深色模式" 1
 @var	text font-stack	"全局字体" "'苹方-简', 'Noto Sans SC'"
 @var	text font-stack-codeblock "代码块字体" "'Fira Code', '等距更纱黑体 SC'"
-@var	text main-background "自定义背景" "url(https://cdn.luogu.com.cn/upload/image_hosting/7ludxt0p.png)"
+@var	text main-background "自定义背景" "url(https://cdn.luogu.com.cn/upload/image_hosting/ti8kuexk.png)"
+@var	text dark-background "自定义深色背景" "url(https://cdn.luogu.com.cn/upload/image_hosting/3skvhdl5.png)"
 @var	checkbox header-acrylic "顶栏亚克力效果" 1
 @var	checkbox nav-acrylic "侧栏亚克力效果" 1
 @var	checkbox card-acrylic "卡片亚克力效果" 1
@@ -17,6 +18,22 @@
 @var	checkbox remove-ad "去除洛谷广告" 0
 @var	checkbox remove-reply-container "隐藏讨论区「编辑回复」栏" 0
 ==/UserStyle== */
+
+.progress-frame
+    border none !important
+    border-radius 7px !important
+    >div
+        border-radius 7px !important
+        background-color #39C5BB !important
+
+
+.difficulty span {
+    border-radius 25px
+}
+
+.tag span {
+	border-radius 25px
+}
 
 //! 字体导入 ---------
 
@@ -146,6 +163,7 @@ else
 // ! 配置部分结束 ---------
 
 main-background = body_bg_color unless main-background
+dark-background = body_bg_color unless dark-background
 
 // d0j1a_1701 最爱的亚克力材质
 // 基于伪元素的亚克力实现，不会造成层叠混乱
@@ -311,9 +329,26 @@ mdeditor-patch()
 
 /* 全局样式 */
 @-moz-document regexp("^(https?://www.luogu.com(.cn)?/).*")
-	*
-		scrollbar-width thin
-		scrollbar-color scrollbar_thumb_color scrollbar_track_color
+
+	::-webkit-scrollbar
+		height 14px
+		width 14px
+		background-color body_bg_color
+	
+	::-webkit-scrollbar:hover
+		background-color body_bg_color
+	
+	::-webkit-scrollbar-thumb
+		background #7f7f7f70
+		background-clip padding-box
+		border 6px solid transparent
+		border-radius 10px
+	
+	::-webkit-scrollbar-thumb:hover
+		border 4px solid transparent
+	
+	::-webkit-scrollbar-corner
+		display none
 
 	*:not(button)
 		border-color line_color !important
@@ -321,15 +356,9 @@ mdeditor-patch()
 	body
 		overflow-x hidden
 		background body_bg_color
-	
+
 	html, body
 		scroll-behavior smooth
-
-	::-webkit-scrollbar-thumb:hover
-		background scrollbar_hover_color
-
-	::-webkit-scrollbar-corner
-		background-color transparent
 
 	::selection
 		background-color selection_bg_color
@@ -347,7 +376,8 @@ mdeditor-patch()
 
 	// 背景修改
 	body
-		background main-background
+		background main-background unless dark-mode
+		background dark-background if dark-mode
 		background-repeat no-repeat
 		background-size cover
 		background-position center
@@ -411,10 +441,16 @@ mdeditor-patch()
 		acrylic() if header-acrylic
 		// background navbar_bg_color unless header-acrylic
 		color subtitle_color !important
+		border-radius 10px !important
+		margin 10px 15px !important
 
 		.header > h1 // 导航栏标题大字
 			font-size 50px
-			color #ffffff
+			color #fff
+			
+		.user-nav
+			margin-top 5px
+			border-radius 5px !important
 
 		.functional[data-v-2dfcfd35] // 题目页面的按钮和时限栏
 			padding-top .7em // 这样不会显得离边太近
@@ -453,12 +489,20 @@ mdeditor-patch()
 		color post_text_color
 		acrylic()
 		border none
-		.ops > a.color-none:hover
-			background button_hover_bg_color
+		.ops > a.color-none
+			margin-top 0 !important
+			transition all 100ms
+			padding 5px 0
+			border-radius 8px
+			&:hover
+				background button_hover_bg_color
 
 	// 页面主体（所有卡片的容器）
 	main.lfe-body
 		background none !important
+		img
+			background #ffffff55 !important
+			border-radius 10px
 	
 	// 首页
 	#app-old
@@ -623,17 +667,21 @@ mdeditor-patch()
 	// 唐氏一样的 Stylus 解析器似乎会把 rgb 里的逗号当作选择器
 	// 因此只能用这种奇怪的方法匹配
 	// 氩洛谷 AC 的绿色很丑，所以去掉了
+	.test-case
+		background-color transparent !important
 	.test-case-wrap > .wrapper
+		.test-case[style*='rgb(82']
+			background-image linear-gradient(to right bottom, #75c319, #52c319, #36c319) !important
 		.test-case[style*='rgb(231']
-			background-color #fb6340 !important
+			background-image linear-gradient(to right bottom, #e73c51, #e74c3c, #e75b3c) !important
 		.test-case[style*='rgb(157']
-			background-color #8e44ad !important
+			background-image linear-gradient(to right bottom, #7a44ad, #8e44ad, #9d44ad) !important
 		.test-case[style*='rgb(5']
-			background-color #001277 !important
+			background-image linear-gradient(to right bottom, #003877, #001277, #020077) !important
 		.test-case[style*='rgb(14']
-			background-color #34495e !important
+			background-image linear-gradient(to right bottom, #34495e, #34495e, #34415e) !important
 		.test-case[style*='rgb(20']
-			background-color #3498db !important
+			background-image linear-gradient(to right bottom, #34b6db, #3498db, #347edb) !important
 		&:hover .message
 			border-radius 6px
 			margin-top -30px
@@ -825,15 +873,19 @@ mdeditor-patch()
 	// footer
 	div.lfe-body:not(.header-layout)
 		acrylic-bg() if footer-acrylic
+		border-radius 10px !important
+		margin 10px 15px !important
 		.footer > .qr-img
 			display none
 
 	// 侧栏
 	#app > nav.lfe-body
+		box-shadow none
+		margin 10px 7px !important
+		height calc(100% - 20px) !important
+		border-radius 10px !important
 		background navbar_bg_color !important unless nav-acrylic
 		acrylic() if nav-acrylic
-		box-shadow none
-
 		& > a
 			color post_text_color !important
 			height 3.7em
@@ -845,7 +897,7 @@ mdeditor-patch()
 			
 			.icon
 				line-height 2.4em
-				font-size 18px
+				font-size 22px
 				width 100%
 				margin 0 !important
 				transition all 0.3s ease
@@ -867,10 +919,14 @@ mdeditor-patch()
 		& > div:first-child
 			background none !important if dark-mode
 			background navbar_text_color !important unless dark-mode
+			border-radius 7px 7px 0 0 !important
 
 		.popup-button
 			margin-top 8px
 			color navbar_text_color !important
+			
+		.popup-wrap 
+			left 10px
 
 		.popup
 			acrylic()
